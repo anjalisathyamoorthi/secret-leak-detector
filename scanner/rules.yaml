@@ -1,0 +1,84 @@
+rules:
+  - id: aws-access-key
+    name: AWS Access Key
+    pattern: "AKIA[0-9A-Z]{16}"
+    severity: high
+    description: Possible AWS Access Key ID detected
+    recommendation: Remove key from source code and use AWS IAM roles or environment variables.
+
+  - id: aws-secret-key
+    name: AWS Secret Key
+    pattern: "(?i)aws_secret_access_key\\s*[:=]\\s*['\"][A-Za-z0-9/+=]{40}['\"]"
+    severity: high
+    description: Possible AWS Secret Access Key detected
+    recommendation: Rotate the secret key immediately and store credentials in AWS Secrets Manager.
+
+  - id: github-token
+    name: GitHub Personal Access Token
+    pattern: "ghp_[A-Za-z0-9]{36}"
+    severity: high
+    description: GitHub Personal Access Token detected
+    recommendation: Revoke token on GitHub and migrate to fine-grained personal access tokens or secret store.
+
+  - id: google-api-key
+    name: Google API Key
+    pattern: "AIza[0-9A-Za-z\\-_]{35}"
+    severity: high
+    description: Google Cloud API Key detected
+    recommendation: Restrict API key permissions and store key securely outside codebase.
+
+  - id: slack-token
+    name: Slack API Token
+    pattern: "xox[baprs]-[0-9A-Za-z-]{10,48}"
+    severity: high
+    description: Slack OAuth or Bot Token detected
+    recommendation: Revoke token in Slack App settings and use environment secrets.
+
+  - id: stripe-key
+    name: Stripe API Key
+    pattern: "sk_live_[0-9a-zA-Z]{24,}"
+    severity: high
+    description: Stripe Live Secret Key detected
+    recommendation: Roll Stripe API key immediately in Stripe Dashboard.
+
+  - id: jwt-token
+    name: JSON Web Token (JWT)
+    pattern: "eyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+"
+    severity: high
+    description: Hardcoded JWT detected
+    recommendation: Never hardcode session or service JWT tokens in code.
+
+  - id: private-key-header
+    name: RSA/EC Private Key Header
+    pattern: "-----BEGIN [A-Z ]*PRIVATE KEY-----"
+    severity: critical
+    description: Private key header detected
+    recommendation: Remove private key from repository immediately and generate a replacement key pair.
+
+  - id: generic-api-key
+    name: Generic API Key Assignment
+    pattern: "(?i)(api_key|apikey|api-token)\\s*[:=]\\s*['\"][^'\"]{12,}['\"]"
+    severity: high
+    description: Possible API key assigned to variable
+    recommendation: Remove the hardcoded secret value and load from environment variables.
+
+  - id: password-assignment
+    name: Hardcoded Password
+    pattern: "(?i)(password|passwd|pwd)\\s*[:=]\\s*['\"][^'\"]{6,}['\"]"
+    severity: critical
+    description: Hardcoded password variable assignment detected
+    recommendation: Remove cleartext password and use secure configuration or secrets manager.
+
+  - id: database-url
+    name: Database Connection URL
+    pattern: "(?i)(mongodb|postgres|mysql)(\\+srv)?://[^\\s\"']+:[^\\s\"']+@[^\\s\"']+"
+    severity: critical
+    description: Database connection string containing credentials detected
+    recommendation: Remove credentials from DB connection URI and inject via secure environment variables.
+
+  - id: oauth-token
+    name: OAuth Token Assignment
+    pattern: "(?i)(oauth_token|access_token)\\s*[:=]\\s*['\"][^'\"]{16,}['\"]"
+    severity: high
+    description: OAuth access token assigned to variable detected
+    recommendation: Invalidate token and obtain new token dynamically via OAuth authorization flow.
